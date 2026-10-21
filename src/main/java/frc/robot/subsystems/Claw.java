@@ -32,25 +32,28 @@ public class Claw extends SubsystemBase {
     claw.configure(Configs.claw, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
+  
+  private static final double offset = 105;
+
   public enum TiltState
   {
-    TRANSITION(195),
+	START(0),
+    TRANSITION(90),
     CUBEINTAKEFRONT(100),
     CUBEINTAKEBACK(100),
     CONEINTAKEFRONT(150),
     CONEINTAKEBACK(150),
     CUBESCORE(20),
-    CONESCORE(45);
+    CONESCORE(-45);
 
     public double position;
     private TiltState(double position)
     {
-      this.position = position;
+      this.position = position + offset;
     } 
   }
-  private TiltState state = TiltState.TRANSITION;
+  private TiltState state = TiltState.START;
 
-  private final double offset = 105;
 
   @Override
 	public void periodic() 
@@ -60,7 +63,7 @@ public class Claw extends SubsystemBase {
       			// ControlType.kPosition, ClosedLoopSlot.kSlot0, 
       			// ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition()-offset + RobotContainer.getPivotPose()), 0));
 		controller.setSetpoint(
-				TiltState.CONESCORE.position, 
+				TiltState.START.position, 
       			ControlType.kPosition, ClosedLoopSlot.kSlot0, 
       			ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition()-offset + RobotContainer.getPivotPose()), 0));
 

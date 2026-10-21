@@ -112,11 +112,11 @@ public final class Configs {
 		.inverted(false)
 		.smartCurrentLimit(60)
 		.voltageCompensation(10)
-		.closedLoopRampRate(0)
+		.closedLoopRampRate(0.1)
 		.closedLoop
 		.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-		.allowedClosedLoopError(1/180, ClosedLoopSlot.kSlot0)
-		.pid(0.1, 0, 0)
+		.allowedClosedLoopError(1/90, ClosedLoopSlot.kSlot0)
+		.pid(0.007, 0, 0)
 		.outputRange(-1, 1)
 		.positionWrappingEnabled(false);
     tilt.absoluteEncoder
