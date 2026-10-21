@@ -23,7 +23,7 @@ public class Claw extends SubsystemBase {
   private SparkFlex tilt = new SparkFlex(Ports.tilt, MotorType.kBrushless);
   private SparkFlex claw = new SparkFlex(Ports.claw, MotorType.kBrushless);
 
-  private ArmFeedforward ff = new ArmFeedforward(0, 0, 0);
+  private ArmFeedforward ff = new ArmFeedforward(0, 0.8, 0);
   private SparkClosedLoopController controller = tilt.getClosedLoopController();
 
   public Claw() 
@@ -34,13 +34,13 @@ public class Claw extends SubsystemBase {
 
   public enum TiltState
   {
-    TRANSITION(90),
+    TRANSITION(195),
     CUBEINTAKEFRONT(100),
     CUBEINTAKEBACK(100),
     CONEINTAKEFRONT(150),
     CONEINTAKEBACK(150),
     CUBESCORE(20),
-    CONESCORE(20);
+    CONESCORE(45);
 
     public double position;
     private TiltState(double position)
@@ -50,16 +50,21 @@ public class Claw extends SubsystemBase {
   }
   private TiltState state = TiltState.TRANSITION;
 
+  private final double offset = 105;
+
   @Override
 	public void periodic() 
 	{
+		// controller.setSetpoint(
+				// state.position, 
+      			// ControlType.kPosition, ClosedLoopSlot.kSlot0, 
+      			// ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition()-offset + RobotContainer.getPivotPose()), 0));
 		controller.setSetpoint(
-      state.position, 
-      ControlType.kPosition, ClosedLoopSlot.kSlot0, 
-      ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition() - RobotContainer.getPivotPose()),
-      0));
+				TiltState.CONESCORE.position, 
+      			ControlType.kPosition, ClosedLoopSlot.kSlot0, 
+      			ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition()-offset + RobotContainer.getPivotPose()), 0));
 
-		SmartDashboard.putNumber("tilt pos",tilt.getAbsoluteEncoder().getPosition());
+		SmartDashboard.putNumber("tilt encoder",tilt.getAbsoluteEncoder().getPosition());
 	}
 
   public void intake()

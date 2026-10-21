@@ -18,6 +18,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants.Ports;
+import frc.robot.RobotContainer;
 
 public class Pivot extends SubsystemBase {
   private SparkFlex motorL = new SparkFlex(Ports.pivotL, MotorType.kBrushless);
@@ -33,7 +34,7 @@ public class Pivot extends SubsystemBase {
   }
 
   //angle fron zero to horizontal
-  private static final double offset = 24;
+  private static final double offset = 32;
 
   public enum PivotState
   {
@@ -56,9 +57,14 @@ public class Pivot extends SubsystemBase {
   @Override
 	public void periodic() 
 	{
-		controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ff.calculate(Math.toRadians(motorL.getAbsoluteEncoder().getPosition() -offset), 0));
+		controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ff.calculate(getPose(), 0));
 
-		SmartDashboard.putNumber("pivot pos", motorL.getAbsoluteEncoder().getPosition());
+		ff.setKg(ff.getKg() * RobotContainer.getLength());
+
+		controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ff.calculate(getPose(), 0));
+
+		SmartDashboard.putNumber("pivot encoder", motorL.getAbsoluteEncoder().getPosition());
+		SmartDashboard.putNumber("Pivot Pos", getPose());
 	}
 
   public double getState()

@@ -119,10 +119,10 @@ public class RobotContainer {
     {
         return new InstantCommand(
             () -> {
-                m_pivot.transitionState();
-                m_elevator.transitionState();
+             //   m_pivot.transitionState();
+             //   m_elevator.transitionState();
                 m_claw.transitionState();
-            }, m_claw, m_pivot, m_elevator);
+            }, m_claw);//, m_pivot, m_elevator);
     }
     private Command cubeIntakeFront()
     {
@@ -199,7 +199,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
 
-    //   public Command getAutonomousCommand() {
+    public Command getAutonomousCommand() {
+		return new InstantCommand();
     //     // Create config for trajectory
     //     TrajectoryConfig config = new TrajectoryConfig(
     //         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -238,11 +239,16 @@ public class RobotContainer {
 
     //     // Run path followuuing command, then stop at the end.
     //     return swerveControllerCommand.andThen(() -> m_driveSubsystem.drive(0, 0, 0, false));
-
+	}
 
     public static double getPivotPose()
     {
         return m_pivot.getPose();
     }
+
+	public static double getLength()
+	{
+		return m_elevator.getLength();
+	}
 }
   

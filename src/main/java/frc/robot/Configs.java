@@ -3,6 +3,7 @@ package frc.robot;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -110,10 +111,12 @@ public final class Configs {
 		.idleMode(IdleMode.kBrake)
 		.inverted(false)
 		.smartCurrentLimit(60)
-		.voltageCompensation(12)
+		.voltageCompensation(10)
+		.closedLoopRampRate(0)
 		.closedLoop
 		.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-		.pid(0, 0, 0)
+		.allowedClosedLoopError(1/180, ClosedLoopSlot.kSlot0)
+		.pid(0.1, 0, 0)
 		.outputRange(-1, 1)
 		.positionWrappingEnabled(false);
     tilt.absoluteEncoder
