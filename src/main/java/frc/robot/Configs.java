@@ -85,8 +85,7 @@ public final class Configs {
     pivotR.absoluteEncoder
 		.positionConversionFactor(360)
 		.inverted(false)
-		.apply(AbsoluteEncoderConfig.Presets.REV_ThroughBoreEncoderV2);
-	
+		.apply(AbsoluteEncoderConfig.Presets.REV_ThroughBoreEncoder);
 	
     pivotL
 		.apply(pivotR)
@@ -99,7 +98,7 @@ public final class Configs {
 		.voltageCompensation(12)
 		.closedLoop
 		.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-		.pid(0, 0, 0)
+		.pid(0.3, 0, 0)
 		.outputRange(-1, 1)
 		.positionWrappingEnabled(false);
 

@@ -17,6 +17,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
+import frc.robot.Robot;
 import frc.robot.Constants.Ports;
 import frc.robot.RobotContainer;
 
@@ -24,8 +25,7 @@ public class Pivot extends SubsystemBase {
   private SparkFlex motorL = new SparkFlex(Ports.pivotL, MotorType.kBrushless);
   private SparkFlex motorR = new SparkFlex(Ports.pivotR, MotorType.kBrushless);
 
-  private ArmFeedforward ff = new ArmFeedforward(0, 0.1, 0);
-  private SparkClosedLoopController controller = motorL.getClosedLoopController();
+  private SparkClosedLoopController controller = motorR.getClosedLoopController();
 
   public Pivot() 
   {
@@ -54,59 +54,60 @@ public class Pivot extends SubsystemBase {
   }
   private PivotState state = PivotState.TRANSITION;
 
+
+  	private static final double kG = 0.5;
+  
   @Override
 	public void periodic() 
 	{
-		controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ff.calculate(getPose(), 0));
 
-		ff.setKg(ff.getKg() * RobotContainer.getLength());
-
-		controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ff.calculate(getPose(), 0));
-
+		controller.setSetpoint(0+offset, ControlType.kPosition, ClosedLoopSlot.kSlot0, 
+				kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/32.64786 );
+		SmartDashboard.putNumber("pivot ff", kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/25 );
 		SmartDashboard.putNumber("pivot encoder", motorL.getAbsoluteEncoder().getPosition());
 		SmartDashboard.putNumber("Pivot Pos", getPose());
 	}
 
-  public double getState()
-  {
-    return state.position;
-  }
+	public double getState()
+	{
+		return state.position;
+	}
 
-  public double getPose()
-  {
-    return motorL.getAbsoluteEncoder().getPosition()-offset;
-  }
+	public double getPose()
+	{
+		return motorL.getAbsoluteEncoder().getPosition()-offset;
+	}
 
-  public void transitionState()
-  {
-    state = PivotState.TRANSITION;
-  }
-  public void scoreConeState()
-  {
-    state = PivotState.CONESCORE;
-  }
-  public void cubeIntakeFront()
-  {
-    state = PivotState.CUBEINTAKEFRONT;
-  }
-  public void cubeIntakeBack()
-  {
-    state = PivotState.CUBEINTAKEBACK;
-  }
-  public void coneIntakeFront()
-  {
-    state = PivotState.CONEINTAKEFRONT;
-  }
-  public void coneIntakeBack()
-  {
-    state = PivotState.CONEINTAKEBACK;
-  }
-  public void coneScoreState()
-  {
-    state = PivotState.CONESCORE;
-  }
-  public void cubeScoreState()
-  {
-    state = PivotState.CUBESCORE;
-  }
+	public void transitionState()
+	{
+		state = PivotState.TRANSITION;
+	}
+	public void scoreConeState()
+	{
+		state = PivotState.CONESCORE;
+	}
+	public void cubeIntakeFront()
+	{
+		state = PivotState.CUBEINTAKEFRONT;
+	}
+	public void cubeIntakeBack()
+	{
+		state = PivotState.CUBEINTAKEBACK;
+	}
+	public void coneIntakeFront()
+	{
+		state = PivotState.CONEINTAKEFRONT;
+	}
+	public void coneIntakeBack()
+	{
+		state = PivotState.CONEINTAKEBACK;
+	}
+	public void coneScoreState()
+	{
+		state = PivotState.CONESCORE;
+	}
+	public void cubeScoreState()
+	{
+		state = PivotState.CUBESCORE;
+	}
 }

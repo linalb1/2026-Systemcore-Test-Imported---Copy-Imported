@@ -246,6 +246,11 @@ public class RobotContainer {
         return m_pivot.getPose();
     }
 
+	public static double getRealTiltPose()
+	{
+		return m_claw.getRealPose();
+	}
+
 	public static double getLength()
 	{
 		return m_elevator.getLength();

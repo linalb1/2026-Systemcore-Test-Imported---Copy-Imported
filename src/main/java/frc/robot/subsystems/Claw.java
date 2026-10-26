@@ -70,52 +70,57 @@ public class Claw extends SubsystemBase {
 		SmartDashboard.putNumber("tilt encoder",tilt.getAbsoluteEncoder().getPosition());
 	}
 
-  public void intake()
-  {
-    claw.set(0.5);
-  }
+	public double getRealPose()
+	{
+		return tilt.getAbsoluteEncoder().getPosition() - offset + RobotContainer.getPivotPose();
+	}
+	
+	public void intake()
+	{
+		claw.set(0.5);
+	}
 
-  public void outtake()
-  {
-    claw.set(-0.5);
-  }
+	public void outtake()
+	{
+		claw.set(-0.5);
+	}
 
-  public void stop()
-  {
-    claw.stopMotor();
-  }
+	public void stop()
+	{
+		claw.stopMotor();
+	}
 
-  public void transitionState()
-  {
-    state = TiltState.TRANSITION;
-    claw.stopMotor();
-  }
-  public void scoreConeState()
-  {
-    state = TiltState.CONESCORE;
-  }
-  public void cubeIntakeFront()
-  {
-    state = TiltState.CUBEINTAKEFRONT;
-  }
-  public void cubeIntakeBack()
-  {
-    state = TiltState.CUBEINTAKEBACK;
-  }
-  public void coneIntakeFront()
-  {
-    state = TiltState.CONEINTAKEFRONT;
-  }
-  public void coneIntakeBack()
-  {
-    state = TiltState.CONEINTAKEBACK;
-  }
-  public void coneScoreState()
-  {
-    state = TiltState.CONESCORE;
-  }
-  public void cubeScoreState()
-  {
-    state = TiltState.CUBESCORE;
-  }
+	public void transitionState()
+	{
+		state = TiltState.TRANSITION;
+		claw.stopMotor();
+	}
+	public void scoreConeState()
+	{
+		state = TiltState.CONESCORE;
+	}
+	public void cubeIntakeFront()
+	{
+		state = TiltState.CUBEINTAKEFRONT;
+	}
+	public void cubeIntakeBack()
+	{
+		state = TiltState.CUBEINTAKEBACK;
+	}
+	public void coneIntakeFront()
+	{
+		state = TiltState.CONEINTAKEFRONT;
+	}
+	public void coneIntakeBack()
+	{
+		state = TiltState.CONEINTAKEBACK;
+	}
+	public void coneScoreState()
+	{
+		state = TiltState.CONESCORE;
+	}
+	public void cubeScoreState()
+	{
+		state = TiltState.CUBESCORE;
+	}
 }

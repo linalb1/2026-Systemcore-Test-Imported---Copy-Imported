@@ -14,10 +14,10 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Configs;
@@ -30,14 +30,16 @@ public class Elevator extends SubsystemBase {
 
 	private SparkClosedLoopController controller = motorR.getClosedLoopController();
 
-	private DigitalInput topInner = new DigitalInput(0);
-	private DigitalInput topOuter = new DigitalInput(1);
+	private DigitalInput topInner = new DigitalInput(5);
+	private DigitalInput topOuter = new DigitalInput(4);
 	private DigitalInput botInner = new DigitalInput(2);
 	private DigitalInput botOuter = new DigitalInput(3);
 
-	public Trigger isDown = new Trigger(()-> botInner.get() && botOuter.get());
+
+	// 
+	public Trigger isDown = new Trigger(()-> !botInner.get() && !botOuter.get());
 	
-	public Trigger isUp = new Trigger(()-> topInner.get() && topOuter.get());
+	public Trigger isUp = new Trigger(()-> !topInner.get() && !topOuter.get());
 
 	/** Creates a new Elevator. */
 	public Elevator() 
@@ -67,34 +69,39 @@ public class Elevator extends SubsystemBase {
 
 	private ElevatorState state = ElevatorState.TRANSITION;
 
-	private static double kG = 0;
-
+	private static double kG = 10;
+      
 	@Override
 	public void periodic() 
 	{
-		controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, Math.sin(Math.toRadians(RobotContainer.getPivotPose())*kG));
+		controller.setSetpoint(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, Math.sin(Math.toRadians(RobotContainer.getPivotPose())*kG));
 
 		SmartDashboard.putNumber("elevator pos", motorR.getEncoder().getPosition());
-		SmartDashboard.putBoolean("dio 0", topInner.get());
-		SmartDashboard.putBoolean("dio 1", topOuter.get());
-		SmartDashboard.putBoolean("dio 2", botInner.get());
-		SmartDashboard.putBoolean("dio 3", botOuter.get());
-		SmartDashboard.putBoolean("down",isUp.getAsBoolean());
-		SmartDashboard.putBoolean("up",isDown.getAsBoolean());
+		SmartDashboard.putBoolean("dio 5", !topInner.get());
+		SmartDashboard.putBoolean("dio 4", !topOuter.get());
+		SmartDashboard.putBoolean("dio 2", !botInner.get());
+		SmartDashboard.putBoolean("dio 3", !botOuter.get());
+		SmartDashboard.putBoolean("down",isDown.getAsBoolean());
+		SmartDashboard.putBoolean("up",isUp.getAsBoolean());
 
-		XboxController a = new XboxController(1);// TODO
-		if(a.getYButton())
-			motorR.set(.1);
-		else if(a.getAButton())
-			motorR.set(-0.1);
-		else
-			motorR.set(0);
+		if(!botInner.get() && !botOuter.get())
+			motorR.getEncoder().setPosition(0);
+		else if(!topInner.get() && !topOuter.get())
+			{
+				// motorL.stopMotor();motorR.stopMotor();
+				motorR.getEncoder().setPosition(100);}
+				
+		XboxController a = new XboxController(1); // TODO
+		if(a.getLeftStickButton())
+			motorR.set(-0.5);
+		else if(a.getBackButton())
+			motorR.getEncoder().setPosition(0);
 	}
 
 
-	private final double a = 9;
+	private final double a = 0.251243;
 
-	private final double b = 9;
+	private final double b = 32.64786;
 
 	public double getLength()
 	{
