@@ -83,6 +83,7 @@ public class Elevator extends SubsystemBase {
 		SmartDashboard.putBoolean("dio 3", !botOuter.get());
 		SmartDashboard.putBoolean("down",isDown.getAsBoolean());
 		SmartDashboard.putBoolean("up",isUp.getAsBoolean());
+		
 
 		if(!botInner.get() && !botOuter.get())
 			motorR.getEncoder().setPosition(0);

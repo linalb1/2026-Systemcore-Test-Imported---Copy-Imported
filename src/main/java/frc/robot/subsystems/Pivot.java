@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.PersistMode;
@@ -26,9 +27,11 @@ public class Pivot extends SubsystemBase {
   private SparkFlex motorR = new SparkFlex(Ports.pivotR, MotorType.kBrushless);
 
   private SparkClosedLoopController controller = motorR.getClosedLoopController();
+  private PIDController pid = new PIDController(2, 0, 0);
 
   public Pivot() 
   {
+	pid.enableContinuousInput(-1, 1);
     motorL.configure(Configs.pivotL, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     motorR.configure(Configs.pivotR, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -55,17 +58,21 @@ public class Pivot extends SubsystemBase {
   private PivotState state = PivotState.TRANSITION;
 
 
-  	private static final double kG = 0.5;
+  	private static final double kG = 0.47;
   
   @Override
 	public void periodic() 
 	{
-
-		controller.setSetpoint(0+offset, ControlType.kPosition, ClosedLoopSlot.kSlot0, 
-				kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/32.64786 );
-		SmartDashboard.putNumber("pivot ff", kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/25 );
+		double pidVolts = pid.calculate(getPose()-offset, 45 + offset);
+		double ff = -kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/32.64786;
+		motorR.setVoltage(pidVolts+ff);
 		SmartDashboard.putNumber("pivot encoder", motorL.getAbsoluteEncoder().getPosition());
 		SmartDashboard.putNumber("Pivot Pos", getPose());
+		SmartDashboard.putNumber("setpoint", pid.getSetpoint());
+		SmartDashboard.putNumber("pidvolts", pidVolts);
+		SmartDashboard.putNumber("ff", ff);
+		SmartDashboard.putNumber("output", ff+pidVolts);
+
 	}
 
 	public double getState()

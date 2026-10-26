@@ -74,22 +74,22 @@ public final class Configs {
 
     pivotR
 		.idleMode(IdleMode.kBrake)
-		.inverted(false)
+		.inverted(true)
 		.smartCurrentLimit(80)
 		.voltageCompensation(12)
 		.closedLoop
 		.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-		.pid(0, 0, 0)
+		.pid(0.001, 0, 0)
 		.outputRange(-1, 1)
 		.positionWrappingEnabled(false);
     pivotR.absoluteEncoder
 		.positionConversionFactor(360)
 		.inverted(false)
-		.apply(AbsoluteEncoderConfig.Presets.REV_ThroughBoreEncoder);
+		.apply(AbsoluteEncoderConfig.Presets. REV_ThroughBoreEncoder);
 	
     pivotL
 		.apply(pivotR)
-      	.follow(10, true);
+      	.follow(9, true);
 
     elevatorR
 		.idleMode(IdleMode.kBrake)
