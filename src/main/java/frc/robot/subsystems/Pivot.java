@@ -4,58 +4,58 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
+// import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
-import frc.robot.Robot;
 import frc.robot.Constants.Ports;
 import frc.robot.RobotContainer;
 
 public class Pivot extends SubsystemBase {
-  private SparkFlex motorL = new SparkFlex(Ports.pivotL, MotorType.kBrushless);
-  private SparkFlex motorR = new SparkFlex(Ports.pivotR, MotorType.kBrushless);
+	private SparkFlex motorL = new SparkFlex(Ports.pivotL, MotorType.kBrushless);
+	private SparkFlex motorR = new SparkFlex(Ports.pivotR, MotorType.kBrushless);
 
-  private SparkClosedLoopController controller = motorR.getClosedLoopController();
-  private PIDController pid = new PIDController(2, 0, 0);
+	// private SparkClosedLoopController controller = motorR.getClosedLoopController();
+	private PIDController pid = new PIDController(0.1, 0, 0);
 
-  public Pivot() 
-  {
-	pid.enableContinuousInput(-1, 1);
-    motorL.configure(Configs.pivotL, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    motorR.configure(Configs.pivotR, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
+	public Pivot() 
+	{
+		pid.disableContinuousInput();
+		pid.setTolerance(2);
+		
+		motorL.configure(Configs.pivotL, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+		motorR.configure(Configs.pivotR, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+	}
 
-  //angle fron zero to horizontal
-  private static final double offset = 32;
+	//angle fron zero to horizontal
+	private static final double offset = 32;
 
-  public enum PivotState
-  {
-    TRANSITION(90),
-    CONESCORE(60),
-    CUBESCORE(60),
-    CONEINTAKEFRONT(-45),
-    CONEINTAKEBACK(225),
-    CUBEINTAKEFRONT(-45),
-    CUBEINTAKEBACK(225);
+	public enum PivotState
+	{
+		START(90),
+		TRANSITION(-offset),
+		CONESCORE(60),
+		CUBESCORE(60),
+		CONEINTAKEFRONT(13.5),
+		CONEINTAKEBACK(225),
+		CUBEINTAKEFRONT(-45),
+		CUBEINTAKEBACK(225);
 
-    public double position;
-    private PivotState(double position)
-    {
-      this.position = position + offset;
-    } 
-  }
-  private PivotState state = PivotState.TRANSITION;
+		public double position;
+		private PivotState(double position)
+		{
+			this.position = position + offset;
+		} 
+	}
+  	private PivotState state = PivotState.TRANSITION;
 
 
   	private static final double kG = 0.47;
@@ -63,15 +63,18 @@ public class Pivot extends SubsystemBase {
   @Override
 	public void periodic() 
 	{
-		double pidVolts = pid.calculate(getPose()-offset, 45 + offset);
-		double ff = -kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/32.64786;
-		motorR.setVoltage(pidVolts+ff);
-		SmartDashboard.putNumber("pivot encoder", motorL.getAbsoluteEncoder().getPosition());
-		SmartDashboard.putNumber("Pivot Pos", getPose());
-		SmartDashboard.putNumber("setpoint", pid.getSetpoint());
-		SmartDashboard.putNumber("pidvolts", pidVolts);
-		SmartDashboard.putNumber("ff", ff);
-		SmartDashboard.putNumber("output", ff+pidVolts);
+		pid.setSetpoint(state.position);
+		double pidVolts = pid.calculate(getPose() + offset);
+		double ff = kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/32.64786;
+		motorR.setVoltage(MathUtil.clamp(pidVolts+ff, -1,1));
+		
+
+		SmartDashboard.putNumber("Pivot/pivot encoder", motorL.getAbsoluteEncoder().getPosition());
+		SmartDashboard.putNumber("Pivot/Pivot Pos", getPose());
+		SmartDashboard.putNumber("Pivot/setpoint", pid.getSetpoint());
+		SmartDashboard.putNumber("Pivot/pidvolts", pidVolts);
+		SmartDashboard.putNumber("Pivot/ff", ff);
+		SmartDashboard.putNumber("Pivot/output", ff+pidVolts); 
 
 	}
 

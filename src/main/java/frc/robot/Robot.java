@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -53,6 +54,23 @@ public class Robot extends LoggedRobot {
 		// and running subsystem periodic() methods.  This must be called from the robot's periodic
 		// block in order for anything in the Command-based framework to work.
 		CommandScheduler.getInstance().run();
+
+		SmartDashboard.putBoolean("trigger/slow", RobotContainer.slow.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/cone", RobotContainer.cone.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/cube", RobotContainer.cube.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/front", RobotContainer.front.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/intaking", RobotContainer.intaking.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/cubeintakefront", RobotContainer.cubeIntakeFront.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/cubeintakeback", RobotContainer.cubeIntakeBack.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/coneintakefront", RobotContainer.coneIntakeFront.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/coneintakeback", RobotContainer.coneIntakeBack.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/conescorestate", RobotContainer.coneScoreState.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/cubescorestate", RobotContainer.cubeScoreState.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/aligning", RobotContainer.aligning.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/intakingcube", RobotContainer.intakingCube.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/intakingcone", RobotContainer.intakingCone.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/scorecone", RobotContainer.scoreCone.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/scorecbe", RobotContainer.scoreCube.getAsBoolean());
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */

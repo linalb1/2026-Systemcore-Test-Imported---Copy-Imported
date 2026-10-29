@@ -74,14 +74,8 @@ public final class Configs {
 
     pivotR
 		.idleMode(IdleMode.kBrake)
-		.inverted(true)
-		.smartCurrentLimit(80)
-		.voltageCompensation(12)
-		.closedLoop
-		.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-		.pid(0.001, 0, 0)
-		.outputRange(-1, 1)
-		.positionWrappingEnabled(false);
+		.inverted(false)
+		.smartCurrentLimit(80);
     pivotR.absoluteEncoder
 		.positionConversionFactor(360)
 		.inverted(false)
@@ -114,7 +108,7 @@ public final class Configs {
 		.closedLoopRampRate(0.1)
 		.closedLoop
 		.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-		.allowedClosedLoopError(1/90, ClosedLoopSlot.kSlot0)
+		.allowedClosedLoopError(1/120, ClosedLoopSlot.kSlot0)
 		.pid(0.007, 0, 0)
 		.outputRange(-1, 1)
 		.positionWrappingEnabled(false);
@@ -127,6 +121,6 @@ public final class Configs {
 		.idleMode(IdleMode.kBrake)
 		.inverted(false)
 		.smartCurrentLimit(40)
-		.voltageCompensation(12);
+		.voltageCompensation(10);
   	}
 }

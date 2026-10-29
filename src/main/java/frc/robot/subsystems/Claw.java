@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import javax.lang.model.util.ElementScanner14;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -13,6 +15,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
@@ -41,7 +44,7 @@ public class Claw extends SubsystemBase {
     TRANSITION(90),
     CUBEINTAKEFRONT(100),
     CUBEINTAKEBACK(100),
-    CONEINTAKEFRONT(150),
+    CONEINTAKEFRONT(-70),
     CONEINTAKEBACK(150),
     CUBESCORE(20),
     CONESCORE(-45);
@@ -63,11 +66,19 @@ public class Claw extends SubsystemBase {
       			// ControlType.kPosition, ClosedLoopSlot.kSlot0, 
       			// ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition()-offset + RobotContainer.getPivotPose()), 0));
 		controller.setSetpoint(
-				TiltState.START.position, 
+				state.position, 
       			ControlType.kPosition, ClosedLoopSlot.kSlot0, 
       			ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition()-offset + RobotContainer.getPivotPose()), 0));
 
 		SmartDashboard.putNumber("tilt encoder",tilt.getAbsoluteEncoder().getPosition());
+
+		XboxController a = new XboxController(1); // TODO
+		if(a.getLeftStickButton())
+			claw.set(-0.5);
+		else if(a.getRightStickButton())
+			claw.set(0.5);
+		else 
+			claw.set(0);
 	}
 
 	public double getRealPose()

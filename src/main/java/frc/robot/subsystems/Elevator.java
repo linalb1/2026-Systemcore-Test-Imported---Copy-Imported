@@ -53,10 +53,11 @@ public class Elevator extends SubsystemBase {
 
 	public enum ElevatorState
 	{
+		START(0),
 		TRANSITION(0),
 		CONESCORE(100),
 		CUBESCORE(100),
-		CONEINTAKE(70),
+		CONEINTAKE(0),
 		CUBEINTAKE(70);
 
 		public double position;
@@ -74,7 +75,7 @@ public class Elevator extends SubsystemBase {
 	@Override
 	public void periodic() 
 	{
-		controller.setSetpoint(0, ControlType.kPosition, ClosedLoopSlot.kSlot0, Math.sin(Math.toRadians(RobotContainer.getPivotPose())*kG));
+		controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, Math.sin(Math.toRadians(RobotContainer.getPivotPose())*kG));
 
 		SmartDashboard.putNumber("elevator pos", motorR.getEncoder().getPosition());
 		SmartDashboard.putBoolean("dio 5", !topInner.get());
@@ -92,11 +93,13 @@ public class Elevator extends SubsystemBase {
 				// motorL.stopMotor();motorR.stopMotor();
 				motorR.getEncoder().setPosition(100);}
 				
-		XboxController a = new XboxController(1); // TODO
-		if(a.getLeftStickButton())
-			motorR.set(-0.5);
-		else if(a.getBackButton())
-			motorR.getEncoder().setPosition(0);
+		// XboxController a = new XboxController(1); // TODO
+		// if(a.getLeftStickButton())
+		// 	motorR.set(-0.5);
+		// else if(a.getRightStickButton())
+		// 	motorR.set(0.5);
+		// else if(a.getBackButton())
+		// 	motorR.getEncoder().setPosition(0);
 	}
 
 

@@ -47,14 +47,14 @@ public class RobotContainer {
 
     public static Trigger intaking = m_cont0.rightBumper();
 
-    public static Trigger cubeIntakeFront = cube.and(front).and(intaking).and(slow);
-    public static Trigger cubeIntakeBack = cube.and(front).negate().and(intaking).and(slow);
+    public static Trigger cubeIntakeFront = front.and(intaking).and(slow).and(cube);
+    public static Trigger cubeIntakeBack = front.negate().and(intaking).and(slow).and(cube);
 
-    public static Trigger coneIntakeFront = cone.and(front).and(intaking).and(slow);
-    public static Trigger coneIntakeBack = cone.and(front).negate().and(intaking).and(slow);
+    public static Trigger coneIntakeFront = front.and(intaking).and(slow).and(cone);
+    public static Trigger coneIntakeBack = front.negate().and(intaking).and(slow).and(cone);
 
-    public static Trigger coneScoreState = cone.and(intaking).negate().and(slow);
-    public static Trigger cubeScoreState = cube.and(intaking).negate().and(slow);
+    public static Trigger coneScoreState = intaking.negate().and(slow).and(cone);
+    public static Trigger cubeScoreState = intaking.negate().and(slow).and(cube);
 
     public static Trigger aligning = m_cont0.leftStick();     
 
@@ -64,6 +64,7 @@ public class RobotContainer {
     public static Trigger intakingCone = intaking.and(cone);
     public static Trigger intakingCube = intaking.and(cube);
 
+	
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -80,8 +81,8 @@ public class RobotContainer {
                     m_driveSubsystem.inputDeadband(-m_cont0.getRightX()) * speedMod,
 			true);}, m_driveSubsystem));
         m_claw.setDefaultCommand(new InstantCommand(() -> {m_claw.transitionState();}, m_claw));
-        m_pivot.setDefaultCommand(new InstantCommand(() -> {m_pivot.transitionState();}, m_pivot));
-        m_elevator.setDefaultCommand(new InstantCommand(() -> {m_elevator.transitionState();}, m_elevator));
+        // m_pivot.setDefaultCommand(new InstantCommand(() -> {m_pivot.transitionState();}, m_pivot));
+        // m_elevator.setDefaultCommand(new InstantCommand(() -> {m_elevator.transitionState();}, m_elevator));
     }
 
     /**
@@ -119,8 +120,8 @@ public class RobotContainer {
     {
         return new InstantCommand(
             () -> {
-             //   m_pivot.transitionState();
-             //   m_elevator.transitionState();
+               m_pivot.transitionState();
+               m_elevator.transitionState();
                 m_claw.transitionState();
             }, m_claw);//, m_pivot, m_elevator);
     }
