@@ -41,7 +41,7 @@ public class Pivot extends SubsystemBase {
 	public enum PivotState
 	{
 		START(90),
-		TRANSITION(-offset),
+		TRANSITION(212),
 		CONESCORE(60),
 		CUBESCORE(60),
 		CONEINTAKEFRONT(13.5),

@@ -41,7 +41,7 @@ public class Claw extends SubsystemBase {
   public enum TiltState
   {
 	START(0),
-    TRANSITION(90),
+    TRANSITION(-90),
     CUBEINTAKEFRONT(100),
     CUBEINTAKEBACK(100),
     CONEINTAKEFRONT(-70),

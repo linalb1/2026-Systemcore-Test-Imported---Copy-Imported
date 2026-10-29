@@ -7,6 +7,8 @@ package frc.robot.subsystems.drive;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,12 +16,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.CANBus;
 
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.util.LimelightHelpers;
 
 // import org.wpilib.command2.SubsystemBase;
 
@@ -39,7 +44,7 @@ public class Drive extends SubsystemBase{
       DriveConstants.kFrontRightDrivingMotorOnBottom,
       DriveConstants.kFrontRightTurningMotorOnBottom);
 
-  private final Module m_baackLeft = new Module(
+  private final Module m_backLeft = new Module(
       DriveConstants.kBackLeftDrivingCanId,
       DriveConstants.kBackLeftTurningCanId,
       DriveConstants.kRearLeftChassisAngularOffset,
@@ -57,6 +62,20 @@ public class Drive extends SubsystemBase{
   // The gyro sensor
   private final Pigeon2 m_gyro = new Pigeon2(22, driveCan);
 
+
+	public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
+		DriveConstants.kDriveKinematics,
+		Rotation2d.fromDegrees(getHeading()),
+			new SwerveModulePosition[] {
+				m_frontLeft.getPosition(),
+				m_frontRight.getPosition(),
+				m_backLeft.getPosition(),
+				m_backRight.getPosition(),
+			},
+		new Pose2d(3, 3, new Rotation2d()),
+		LimelightConstants.m_stateStdDevs,
+		LimelightConstants.m_visionStdDevs);
+		
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
@@ -64,7 +83,7 @@ public class Drive extends SubsystemBase{
       new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
-            m_baackLeft.getPosition(),
+            m_backLeft.getPosition(),
             m_backRight.getPosition()
         });
 
@@ -74,6 +93,8 @@ public class Drive extends SubsystemBase{
 
   }
 
+  double xyStdDev;
+
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
@@ -82,9 +103,48 @@ public class Drive extends SubsystemBase{
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
-            m_baackLeft.getPosition(),
+            m_backLeft.getPosition(),
             m_backRight.getPosition()
         });
+
+	for (String limelightName : LimelightConstants.kCameraNames) {
+			LimelightHelpers.SetRobotOrientation(limelightName, getHeading(), 0, 0, 0, 0, 0);
+		}
+
+		LimelightHelpers.Flush();
+
+		double omegaRps = Units.degreesToRotations(getTurnRate());
+
+		if (Math.abs(omegaRps) < 1) {
+			for (String limelightName : LimelightConstants.kCameraNames) {
+				var measurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
+				if (measurement != null&& measurement.tagCount > 0
+					// && Double.isFinite(measurement.pose.getX()) && Double.isFinite(measurement.pose.getY())
+					) 
+				{
+					xyStdDev = .7 * (1 + measurement.avgTagDist * .5);
+					m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev, xyStdDev, 9999999));
+					m_poseEstimator.addVisionMeasurement(measurement.pose, measurement.timestampSeconds);
+				}
+			}
+		}
+
+
+    	var leftLLMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-l");
+    	var rightLLMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-r");
+		if (Math.abs(omegaRps) < 1)
+		{
+			if (leftLLMeasurement != null && leftLLMeasurement.tagCount > 0) {
+				xyStdDev = .7 * (1 + leftLLMeasurement.avgTagDist * .5);
+				m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev, xyStdDev, 9999999));
+				m_poseEstimator.addVisionMeasurement(leftLLMeasurement.pose, leftLLMeasurement.timestampSeconds);
+			}
+			if (rightLLMeasurement != null && rightLLMeasurement.tagCount > 0) {
+				xyStdDev = .7 * (1 + rightLLMeasurement.avgTagDist * .5);
+				m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev, xyStdDev, 9999999));
+				m_poseEstimator.addVisionMeasurement(rightLLMeasurement.pose, rightLLMeasurement.timestampSeconds);
+			}
+		}
   }
 
   /**
@@ -107,7 +167,7 @@ public class Drive extends SubsystemBase{
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
-            m_baackLeft.getPosition(),
+            m_backLeft.getPosition(),
             m_backRight.getPosition()
         },
         pose);
@@ -138,7 +198,7 @@ public class Drive extends SubsystemBase{
         swerveModuleVelocities, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleVelocities[0]);
     m_frontRight.setDesiredState(swerveModuleVelocities[1]);
-    m_baackLeft.setDesiredState(swerveModuleVelocities[2]);
+    m_backLeft.setDesiredState(swerveModuleVelocities[2]);
     m_backRight.setDesiredState(swerveModuleVelocities[3]);
   }
 
@@ -148,7 +208,7 @@ public class Drive extends SubsystemBase{
   public void setX() {
     m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    m_baackLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    m_backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     m_backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
@@ -162,14 +222,14 @@ public class Drive extends SubsystemBase{
         desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
-    m_baackLeft.setDesiredState(desiredStates[2]);
+    m_backLeft.setDesiredState(desiredStates[2]);
     m_backRight.setDesiredState(desiredStates[3]);
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
     m_frontLeft.resetEncoders();
-    m_baackLeft.resetEncoders();
+    m_backLeft.resetEncoders();
     m_frontRight.resetEncoders();
     m_backRight.resetEncoders();
   }
