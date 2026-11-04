@@ -46,8 +46,8 @@ public final class Constants {
     public static final int elevatorL = 11;
     public static final int elevatorR = 12;
 
-    public static final int tilt = 14;
-    public static final int claw = 13;
+    public static final int tilt = 13;
+    public static final int claw = 14;
   }
 
   public static final class DriveConstants {

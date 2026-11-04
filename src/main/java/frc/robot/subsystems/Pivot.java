@@ -53,12 +53,13 @@ public class Pivot extends SubsystemBase {
 		private PivotState(double position)
 		{
 			this.position = position + offset;
-		} 
+		}
 	}
   	private PivotState state = PivotState.TRANSITION;
 
 
   	private static final double kG = 0.47;
+	private static final double pidClamp = 5;
   
   @Override
 	public void periodic() 
@@ -66,7 +67,8 @@ public class Pivot extends SubsystemBase {
 		pid.setSetpoint(state.position);
 		double pidVolts = pid.calculate(getPose() + offset);
 		double ff = kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/32.64786;
-		motorR.setVoltage(MathUtil.clamp(pidVolts+ff, -1,1));
+
+		motorR.setVoltage(MathUtil.clamp(pidVolts+ff, -pidClamp,pidClamp));
 		
 
 		SmartDashboard.putNumber("Pivot/pivot encoder", motorL.getAbsoluteEncoder().getPosition());
