@@ -21,50 +21,52 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
+import frc.robot.subsystems.Pivot.PivotState;
 
 public class Claw extends SubsystemBase {
-  private SparkFlex tilt = new SparkFlex(Ports.tilt, MotorType.kBrushless);
-  private SparkFlex claw = new SparkFlex(Ports.claw, MotorType.kBrushless);
+	private SparkFlex tilt = new SparkFlex(Ports.tilt, MotorType.kBrushless);
+	private SparkFlex claw = new SparkFlex(Ports.claw, MotorType.kBrushless);
 
-  private ArmFeedforward ff = new ArmFeedforward(0, 0.8, 0);
-  private SparkClosedLoopController controller = tilt.getClosedLoopController();
+	private ArmFeedforward ff = new ArmFeedforward(0, 0.8, 0);
+	private SparkClosedLoopController controller = tilt.getClosedLoopController();
 
-  public Claw() 
-  {
-    tilt.configure(Configs.tilt, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    claw.configure(Configs.claw, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
+	public Claw() 
+	{
+		tilt.configure(Configs.tilt, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+		claw.configure(Configs.claw, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+	}
 
-  
-  private static final double offset = 105;
+	
+	private static final double offset = 105;
 
-  public enum TiltState
-  {
-	START(0),
-    TRANSITION(90),
-    CUBEINTAKEFRONT(100),
-    CUBEINTAKEBACK(100),
-    CONEINTAKEFRONT(-70),
-    CONEINTAKEBACK(150),
-    CUBESCORE(20),
-    CONESCORE(-45);
+	public enum TiltState
+	{
+		START(0),
+		TRANSITION(-90),
+		CUBEINTAKEFRONT(50),
+		CUBEINTAKEBACK(-50),
+		CONEINTAKEFRONT(-70),
+		CONEINTAKEBACK(45),
+		CUBESCORE(-102),
+		CONESCORE(-102);
 
-    public double position;
-    private TiltState(double position)
-    {
-      this.position = position + offset;
-    } 
-  }
-  private TiltState state = TiltState.START;
+		public double position;
+		private TiltState(double position)
+		{
+			this.position = position + offset;
+		} 
+	}
+	private TiltState state = TiltState.START;
 
+		private XboxController a = new XboxController(0);
 
-  @Override
+ 	@Override
 	public void periodic() 
 	{
 		// controller.setSetpoint(
-				// state.position, 
-      			// ControlType.kPosition, ClosedLoopSlot.kSlot0, 
-      			// ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition()-offset + RobotContainer.getPivotPose()), 0));
+			// state.position, 
+    		// ControlType.kPosition, ClosedLoopSlot.kSlot0, 
+  			// ff.calculate(Math.toRadians(tilt.getAbsoluteEncoder().getPosition()-offset + RobotContainer.getPivotPose()), 0));
 		controller.setSetpoint(
 				state.position, 
       			ControlType.kPosition, ClosedLoopSlot.kSlot0, 
@@ -72,11 +74,10 @@ public class Claw extends SubsystemBase {
 
 		SmartDashboard.putNumber("tilt encoder",tilt.getAbsoluteEncoder().getPosition());
 
-		XboxController a = new XboxController(1); // TODO
-		if(a.getLeftStickButton())
-			claw.set(-0.5);
-		else if(a.getRightStickButton())
-			claw.set(0.5);
+		if((state == TiltState.CUBEINTAKEBACK || state == TiltState.CUBEINTAKEFRONT) || (a.getAButton() && state == TiltState.CONESCORE))
+			intake();
+		else if((state == TiltState.CONEINTAKEFRONT || state == TiltState.CONEINTAKEBACK) || (a.getAButton() && state == TiltState.CUBESCORE))
+			outtake();
 		else 
 			claw.set(0);
 	}

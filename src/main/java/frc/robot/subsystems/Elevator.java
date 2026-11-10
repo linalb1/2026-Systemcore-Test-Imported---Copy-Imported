@@ -55,10 +55,10 @@ public class Elevator extends SubsystemBase {
 	{
 		START(0),
 		TRANSITION(0),
-		CONESCORE(100),
-		CUBESCORE(100),
+		CONESCORE(166),
+		CUBESCORE(166),
 		CONEINTAKE(0),
-		CUBEINTAKE(70);
+		CUBEINTAKE(80);
 
 		public double position;
 		
@@ -68,9 +68,9 @@ public class Elevator extends SubsystemBase {
 		} 
 	}
 
-	private ElevatorState state = ElevatorState.TRANSITION;
+	private ElevatorState state = ElevatorState.START;
 
-	private static double kG = 10;
+	private static double kG = 6;
       
 	@Override
 	public void periodic() 
@@ -91,7 +91,7 @@ public class Elevator extends SubsystemBase {
 		else if(!topInner.get() && !topOuter.get())
 			{
 				// motorL.stopMotor();motorR.stopMotor();
-				motorR.getEncoder().setPosition(100);}
+				motorR.getEncoder().setPosition(166);}
 				
 		// XboxController a = new XboxController(1); // TODO
 		// if(a.getLeftStickButton())

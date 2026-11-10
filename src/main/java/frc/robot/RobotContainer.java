@@ -53,16 +53,16 @@ public class RobotContainer {
     public static Trigger coneIntakeFront = front.and(intaking).and(slow).and(cone);
     public static Trigger coneIntakeBack = front.negate().and(intaking).and(slow).and(cone);
 
-    public static Trigger coneScoreState = intaking.negate().and(slow).and(cone);
-    public static Trigger cubeScoreState = intaking.negate().and(slow).and(cube);
+    public static Trigger coneScoreState = m_cont0.leftBumper().and(intaking.negate()).and(slow).and(cone);
+    public static Trigger cubeScoreState = m_cont0.leftBumper().and(intaking.negate()).and(slow).and(cube);
 
     public static Trigger aligning = m_cont0.leftStick();     
 
-    public static Trigger scoreCone = m_cont0.leftBumper().and(cone).and(slow);
-    public static Trigger scoreCube = m_cont0.leftBumper().and(cube).and(slow);
+    // public static Trigger scoreCone = m_cont0.leftBumper().and(cone).and(slow);
+    // public static Trigger scoreCube = m_cont0.a().and(cube);
 
-    public static Trigger intakingCone = intaking.and(cone);
-    public static Trigger intakingCube = intaking.and(cube);
+    // public static Trigger intakingCone = intaking.and(cone);
+    // public static Trigger intakingCube = intaking.and(cube);
 
 	
     /**
@@ -80,7 +80,7 @@ public class RobotContainer {
                     m_driveSubsystem.inputDeadband(-m_cont0.getLeftX()) * speedMod,
                     m_driveSubsystem.inputDeadband(-m_cont0.getRightX()) * speedMod,
 			true);}, m_driveSubsystem));
-        m_claw.setDefaultCommand(new InstantCommand(() -> {m_claw.transitionState();}, m_claw));
+        // m_claw.setDefaultCommand(new InstantCommand(() -> {m_claw.transitionState();}, m_claw));
         // m_pivot.setDefaultCommand(new InstantCommand(() -> {m_pivot.transitionState();}, m_pivot));
         // m_elevator.setDefaultCommand(new InstantCommand(() -> {m_elevator.transitionState();}, m_elevator));
     }
@@ -109,11 +109,11 @@ public class RobotContainer {
         coneScoreState.whileTrue(coneScoreState());
         cubeScoreState.whileTrue(cubeScoreState());
 
-        scoreCone.whileTrue(scoreCone());
-        scoreCube.whileTrue(scoreCube());
+        // scoreCone.whileTrue(scoreCone());
+        // scoreCube.whileTrue(new RunCommand(() -> {m_claw.outtake();}));
 
-        intakingCube.whileTrue(new RunCommand(() -> {m_claw.intake();}, m_claw));
-        intakingCone.whileTrue(new RunCommand(() -> {m_claw.outtake();}, m_claw));
+        // intakingCube.whileTrue(new RunCommand(() -> {m_claw.intake();}));
+        // intakingCone.whileTrue(new RunCommand(() -> {m_claw.outtake();}, m_claw));
     }
 
     private Command transitionState()
@@ -123,7 +123,7 @@ public class RobotContainer {
                m_pivot.transitionState();
                m_elevator.transitionState();
                 m_claw.transitionState();
-            }, m_claw);//, m_pivot, m_elevator);
+            });
     }
     private Command cubeIntakeFront()
     {
@@ -132,7 +132,7 @@ public class RobotContainer {
                 m_pivot.cubeIntakeFront();
                 m_elevator.cubeIntake();
                 m_claw.cubeIntakeBack();
-            }, m_claw, m_pivot, m_elevator);
+            });
     }
     private Command cubeIntakeBack()
     {
@@ -141,7 +141,7 @@ public class RobotContainer {
                 m_pivot.cubeIntakeBack();
                 m_elevator.cubeIntake();
                 m_claw.cubeIntakeBack();
-            }, m_claw, m_pivot, m_elevator);
+            });
     }
     private Command coneIntakeFront()
     {
@@ -150,7 +150,7 @@ public class RobotContainer {
                 m_pivot.coneIntakeFront();
                 m_elevator.coneIntake();
                 m_claw.coneIntakeBack();
-            }, m_claw, m_pivot, m_elevator);
+            });
     }
     private Command coneIntakeBack()
     {
@@ -159,7 +159,7 @@ public class RobotContainer {
                 m_pivot.coneIntakeBack();
                 m_elevator.coneIntake();
                 m_claw.coneIntakeBack();
-            }, m_claw, m_pivot, m_elevator);
+            });
     }
     private Command coneScoreState()
     {
@@ -168,7 +168,7 @@ public class RobotContainer {
                 m_pivot.coneScoreState();
                 m_elevator.coneScoreState();
                 m_claw.coneScoreState();
-            }, m_claw, m_pivot, m_elevator);
+            });
     }
     private Command cubeScoreState()
     {
@@ -177,21 +177,7 @@ public class RobotContainer {
                 m_pivot.cubeScoreState();
                 m_elevator.cubeScoreState();
                 m_claw.cubeScoreState();
-            }, m_claw, m_pivot, m_elevator);
-    }
-    private Command scoreCone()
-    {
-        return new InstantCommand(
-            () -> {
-                m_claw.intake();
-            }, m_claw, m_pivot, m_elevator);
-    }
-    private Command scoreCube()
-    {
-        return new InstantCommand(
-            () -> {
-                m_claw.outtake();
-            }, m_claw, m_pivot, m_elevator);
+            });
     }
 
     /**

@@ -67,10 +67,10 @@ public class Robot extends LoggedRobot {
 		SmartDashboard.putBoolean("trigger/conescorestate", RobotContainer.coneScoreState.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/cubescorestate", RobotContainer.cubeScoreState.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/aligning", RobotContainer.aligning.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/intakingcube", RobotContainer.intakingCube.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/intakingcone", RobotContainer.intakingCone.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/scorecone", RobotContainer.scoreCone.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/scorecbe", RobotContainer.scoreCube.getAsBoolean());
+		// SmartDashboard.putBoolean("trigger/intakingcube", RobotContainer.intakingCube.getAsBoolean());
+		// SmartDashboard.putBoolean("trigger/intakingcone", RobotContainer.intakingCone.getAsBoolean());
+		// SmartDashboard.putBoolean("trigger/scorecone", RobotContainer.scoreCone.getAsBoolean());
+		// SmartDashboard.putBoolean("trigger/scorecbe", RobotContainer.scoreCube.getAsBoolean());
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */

@@ -42,12 +42,12 @@ public class Pivot extends SubsystemBase {
 	{
 		START(90),
 		TRANSITION(212),
-		CONESCORE(60),
-		CUBESCORE(60),
+		CONESCORE(45),
+		CUBESCORE(45),
 		CONEINTAKEFRONT(13.5),
-		CONEINTAKEBACK(225),
-		CUBEINTAKEFRONT(-45),
-		CUBEINTAKEBACK(225);
+		CONEINTAKEBACK(180),
+		CUBEINTAKEFRONT(-30),
+		CUBEINTAKEBACK(210);
 
 		public double position;
 		private PivotState(double position)
@@ -55,11 +55,11 @@ public class Pivot extends SubsystemBase {
 			this.position = position + offset;
 		}
 	}
-  	private PivotState state = PivotState.TRANSITION;
+  	private PivotState state = PivotState.START;
 
 
   	private static final double kG = 0.47;
-	private static final double pidClamp = 5;
+	private static final double pidClamp = 3.5;
   
   @Override
 	public void periodic() 
