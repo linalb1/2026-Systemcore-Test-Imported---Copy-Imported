@@ -110,7 +110,7 @@ public final class Configs {
 		.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
 		.allowedClosedLoopError(1/120, ClosedLoopSlot.kSlot0)
 		.pid(0.007, 0, 0)
-		.outputRange(-1, 1)
+		.outputRange(-5, 0.5)
 		.positionWrappingEnabled(false);
     tilt.absoluteEncoder
 		.positionConversionFactor(360)

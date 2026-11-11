@@ -46,9 +46,9 @@ public class Claw extends SubsystemBase {
 		CUBEINTAKEFRONT(50),
 		CUBEINTAKEBACK(-50),
 		CONEINTAKEFRONT(-70),
-		CONEINTAKEBACK(45),
+		CONEINTAKEBACK(70),
 		CUBESCORE(-102),
-		CONESCORE(-102);
+		CONESCORE(-45);
 
 		public double position;
 		private TiltState(double position)

@@ -131,7 +131,7 @@ public class RobotContainer {
             () -> {
                 m_pivot.cubeIntakeFront();
                 m_elevator.cubeIntake();
-                m_claw.cubeIntakeBack();
+                m_claw.cubeIntakeFront();
             });
     }
     private Command cubeIntakeBack()
@@ -149,7 +149,7 @@ public class RobotContainer {
             () -> {
                 m_pivot.coneIntakeFront();
                 m_elevator.coneIntake();
-                m_claw.coneIntakeBack();
+                m_claw.coneIntakeFront();
             });
     }
     private Command coneIntakeBack()
