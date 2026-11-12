@@ -33,6 +33,13 @@ public class Pivot extends SubsystemBase {
 		motorR.configure(Configs.pivotR, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 	}
 
+	
+	private boolean hasReachedTarget = false;
+	public boolean hasReachedTarget()
+	{
+		return hasReachedTarget;
+	}
+
 	//angle fron zero to horizontal
 	private static final double offset = 35;
 
@@ -62,13 +69,20 @@ public class Pivot extends SubsystemBase {
   @Override
 	public void periodic() 
 	{
+		
 		pid.setSetpoint(state.position);
 		double pidVolts = pid.calculate(getPose() + offset);
 		double ff = kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/32.64786;
-
-		motorR.setVoltage(MathUtil.clamp(pidVolts+ff, -pidClamp,pidClamp));
 		
-
+		if(RobotContainer.getLength()<36 || RobotContainer.elevatorHasReachedPose())
+			motorR.setVoltage(MathUtil.clamp(pidVolts+ff, -pidClamp,pidClamp));
+		else
+			motorR.setVoltage(MathUtil.clamp(ff, -pidClamp,pidClamp));
+		
+		if(Math.abs(state.position - motorL.getAbsoluteEncoder().getPosition()) < 2)
+			hasReachedTarget = true;
+		else
+			hasReachedTarget = false;
 		SmartDashboard.putNumber("Pivot/pivot encoder", motorL.getAbsoluteEncoder().getPosition());
 		SmartDashboard.putNumber("Pivot/Pivot Pos", getPose());
 		SmartDashboard.putNumber("Pivot/setpoint", pid.getSetpoint());

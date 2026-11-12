@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
+
 import frc.robot.subsystems.drive.Drive;
 
 /*
@@ -232,6 +233,14 @@ public class RobotContainer {
     {
         return m_pivot.getPose();
     }
+
+	public static boolean pivotHasReachedTarget()
+	{
+		return m_pivot.hasReachedTarget();
+	}public static boolean elevatorHasReachedPose()
+	{
+		return m_elevator.hasReachedTarget();
+	}
 
 	public static double getRealTiltPose()
 	{

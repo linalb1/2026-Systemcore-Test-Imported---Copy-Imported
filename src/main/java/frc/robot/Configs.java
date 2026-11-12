@@ -48,7 +48,7 @@ public final class Configs {
 
       turningConfig
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(20);   // 70 for SparkFlex
+        .smartCurrentLimit(50);   // 70 for SparkFlex
       turningConfig
         .absoluteEncoder
           // Do not invert the turning encoder, since the output shaft rotates in the same
@@ -104,7 +104,7 @@ public final class Configs {
 		.idleMode(IdleMode.kBrake)
 		.inverted(false)
 		.smartCurrentLimit(60)
-		.voltageCompensation(10)
+		.voltageCompensation(8)
 		.closedLoopRampRate(0.1)
 		.closedLoop
 		.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
@@ -121,6 +121,6 @@ public final class Configs {
 		.idleMode(IdleMode.kBrake)
 		.inverted(false)
 		.smartCurrentLimit(40)
-		.voltageCompensation(10);
+		.voltageCompensation(9);
   	}
 }
