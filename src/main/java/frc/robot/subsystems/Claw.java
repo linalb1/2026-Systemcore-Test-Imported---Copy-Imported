@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import javax.lang.model.util.ElementScanner14;
-
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -21,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Ports;
-import frc.robot.subsystems.Pivot.PivotState;
 
 public class Claw extends SubsystemBase {
 	private SparkFlex tilt = new SparkFlex(Ports.tilt, MotorType.kBrushless);
@@ -45,8 +42,8 @@ public class Claw extends SubsystemBase {
 		TRANSITION(-90),
 		CUBEINTAKEFRONT(50),
 		CUBEINTAKEBACK(-50),
-		CONEINTAKEFRONT(-70),
-		CONEINTAKEBACK(70),
+		CONEINTAKEFRONT(-55),
+		CONEINTAKEBACK(55),
 		CUBESCORE(-102),
 		CONESCORE(-45);
 

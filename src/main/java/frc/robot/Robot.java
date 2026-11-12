@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -71,6 +73,9 @@ public class Robot extends LoggedRobot {
 		// SmartDashboard.putBoolean("trigger/intakingcone", RobotContainer.intakingCone.getAsBoolean());
 		// SmartDashboard.putBoolean("trigger/scorecone", RobotContainer.scoreCone.getAsBoolean());
 		// SmartDashboard.putBoolean("trigger/scorecbe", RobotContainer.scoreCube.getAsBoolean());
+
+		XboxController a = new XboxController(0);
+		a.setRumble(RumbleType.kBothRumble, 0.1);
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */

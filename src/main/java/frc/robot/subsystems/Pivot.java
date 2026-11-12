@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
-// import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -23,7 +22,6 @@ public class Pivot extends SubsystemBase {
 	private SparkFlex motorL = new SparkFlex(Ports.pivotL, MotorType.kBrushless);
 	private SparkFlex motorR = new SparkFlex(Ports.pivotR, MotorType.kBrushless);
 
-	// private SparkClosedLoopController controller = motorR.getClosedLoopController();
 	private PIDController pid = new PIDController(0.1, 0, 0);
 
 	public Pivot() 
@@ -36,7 +34,7 @@ public class Pivot extends SubsystemBase {
 	}
 
 	//angle fron zero to horizontal
-	private static final double offset = 32;
+	private static final double offset = 35;
 
 	public enum PivotState
 	{
