@@ -22,7 +22,7 @@ import frc.robot.subsystems.drive.Drive;
 * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
 * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
 * (including subsystems, commands, and button mappings) should be declared here.
-*/
+*/    
 
 public class RobotContainer {
     // The robot's subsystems
@@ -109,7 +109,7 @@ public class RobotContainer {
         coneIntakeBack.whileTrue(coneIntakeBack());
         coneScoreState.whileTrue(coneScoreState());
         cubeScoreState.whileTrue(cubeScoreState());
-
+ 
         // scoreCone.whileTrue(scoreCone());
         // scoreCube.whileTrue(new RunCommand(() -> {m_claw.outtake();}));
 
