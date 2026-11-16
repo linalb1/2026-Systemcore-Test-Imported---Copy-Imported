@@ -81,10 +81,7 @@ public class Elevator extends SubsystemBase {
 	@Override
 	public void periodic() 
 	{
-		if(state == ElevatorState.TRANSITION || RobotContainer.pivotHasReachedTarget())
-			controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, Math.sin(Math.toRadians(RobotContainer.getPivotPose())*kG));
-		else
-			motorR.setVoltage(Math.sin(Math.toRadians(RobotContainer.getPivotPose())*kG));
+		controller.setSetpoint(state.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, Math.sin(Math.toRadians(RobotContainer.getPivotPose())*kG));
 
 		SmartDashboard.putNumber("elevator pos", motorR.getEncoder().getPosition());
 		SmartDashboard.putBoolean("dio 5", !topInner.get());
@@ -94,7 +91,7 @@ public class Elevator extends SubsystemBase {
 		SmartDashboard.putBoolean("down",isDown.getAsBoolean());
 		SmartDashboard.putBoolean("up",isUp.getAsBoolean());
 		
-		if(Math.abs(state.position - motorR.getEncoder().getPosition()) < 3)
+		if(Math.abs(state.position - motorR.getEncoder().getPosition()) < state.position/2)
 			hasReachedTarget = true;
 		else
 			hasReachedTarget = false;

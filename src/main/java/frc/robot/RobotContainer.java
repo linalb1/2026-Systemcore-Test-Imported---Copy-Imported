@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -119,21 +120,23 @@ public class RobotContainer {
 
     private Command transitionState()
     {
-        return new InstantCommand(
-            () -> {
-               m_pivot.transitionState();
-               m_elevator.transitionState();
-                m_claw.transitionState();
-            });
-    }
+        // return new InstantCommand(
+        //     () -> {
+        //        m_pivot.transitionState();
+        //        m_elevator.transitionState();
+        //         m_claw.transitionState();
+        //     });
+		return Commands.run(()-> {m_claw.transitionState(); m_elevator.transitionState();}).until(m_elevator.isDown).andThen(new InstantCommand(()->{m_pivot.transitionState();}));
+	}
     private Command cubeIntakeFront()
     {
-        return new InstantCommand(
-            () -> {
-                m_pivot.cubeIntakeFront();
-                m_elevator.cubeIntake();
-                m_claw.cubeIntakeFront();
-            });
+        // return new InstantCommand(
+        //     () -> {
+        //         m_pivot.cubeIntakeFront();
+        //         m_elevator.cubeIntake();
+        //         m_claw.cubeIntakeFront();
+        //     });
+		return Commands.run(()-> {m_claw.cubeIntakeFront(); m_pivot.cubeIntakeFront();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{m_elevator.cubeIntake();}));
     }
     private Command cubeIntakeBack()
     {
@@ -164,12 +167,13 @@ public class RobotContainer {
     }
     private Command coneScoreState()
     {
-        return new InstantCommand(
-            () -> {
-                m_pivot.coneScoreState();
-                m_elevator.coneScoreState();
-                m_claw.coneScoreState();
-            });
+        // return new InstantCommand(
+        //     () -> {
+        //         m_pivot.coneScoreState();
+        //         m_elevator.coneScoreState();
+        //         m_claw.coneScoreState();
+        //     });
+		return Commands.run(()-> {m_claw.coneScoreState(); m_pivot.coneScoreState();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{m_elevator.coneScoreState();}));
     }
     private Command cubeScoreState()
     {
