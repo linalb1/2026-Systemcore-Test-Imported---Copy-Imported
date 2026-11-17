@@ -22,7 +22,7 @@ public class Pivot extends SubsystemBase {
 	private SparkFlex motorL = new SparkFlex(Ports.pivotL, MotorType.kBrushless);
 	private SparkFlex motorR = new SparkFlex(Ports.pivotR, MotorType.kBrushless);
 
-	private PIDController pid = new PIDController(0.1, 0, 0);
+	private PIDController pid = new PIDController(0.05, 0, 0);
 
 	public Pivot() 
 	{
@@ -64,19 +64,19 @@ public class Pivot extends SubsystemBase {
 
 
   	private static final double kG = 0.47;
-	private static final double pidClamp = 3.5;
+	private static final double pidClamp = 5;
   
   @Override
 	public void periodic() 
 	{
-		
+
 		pid.setSetpoint(state.position);
 		double pidVolts = pid.calculate(getPose() + offset);
 		double ff = kG * Math.cos(Math.toRadians(getPose())) * RobotContainer.getLength()/32.64786;
 		
 		motorR.setVoltage(MathUtil.clamp(pidVolts+ff, -pidClamp,pidClamp));
 		
-		if(Math.abs(state.position - motorL.getAbsoluteEncoder().getPosition()) < 45)
+		if(Math.abs(state.position-(getPose()+offset)) < 30)
 			hasReachedTarget = true;
 		else
 			hasReachedTarget = false;
@@ -86,6 +86,7 @@ public class Pivot extends SubsystemBase {
 		SmartDashboard.putNumber("Pivot/pidvolts", pidVolts);
 		SmartDashboard.putNumber("Pivot/ff", ff);
 		SmartDashboard.putNumber("Pivot/output", ff+pidVolts); 
+		SmartDashboard.putBoolean("Pivot/hasreached", hasReachedTarget);
 	}
 
 	public double getState()
@@ -101,33 +102,41 @@ public class Pivot extends SubsystemBase {
 	public void transitionState()
 	{
 		state = PivotState.TRANSITION;
+		hasReachedTarget = false;
 	}
 	public void scoreConeState()
 	{
 		state = PivotState.CONESCORE;
+		hasReachedTarget = false;
 	}
 	public void cubeIntakeFront()
 	{
 		state = PivotState.CUBEINTAKEFRONT;
+		hasReachedTarget = false;
 	}
 	public void cubeIntakeBack()
 	{
 		state = PivotState.CUBEINTAKEBACK;
+		hasReachedTarget = false;
 	}
 	public void coneIntakeFront()
 	{
 		state = PivotState.CONEINTAKEFRONT;
+		hasReachedTarget = false;
 	}
 	public void coneIntakeBack()
 	{
 		state = PivotState.CONEINTAKEBACK;
+		hasReachedTarget = false;
 	}
 	public void coneScoreState()
 	{
 		state = PivotState.CONESCORE;
+		hasReachedTarget = false;
 	}
 	public void cubeScoreState()
 	{
 		state = PivotState.CUBESCORE;
+		hasReachedTarget = false;
 	}
 }

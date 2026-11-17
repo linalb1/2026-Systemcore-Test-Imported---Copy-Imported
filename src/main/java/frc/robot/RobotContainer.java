@@ -126,7 +126,16 @@ public class RobotContainer {
         //        m_elevator.transitionState();
         //         m_claw.transitionState();
         //     });
-		return Commands.run(()-> {m_claw.transitionState(); m_elevator.transitionState();}).until(m_elevator.isDown).andThen(new InstantCommand(()->{m_pivot.transitionState();}));
+		// return Commands.run(()-> {m_claw.transitionState(); m_elevator.transitionState();}).andThen(Commands.waitUntil(()->m_elevator.hasReachedTarget())).andThen(new InstantCommand(()->{m_pivot.transitionState();}));
+		
+		return Commands.sequence(
+            Commands.runOnce(() -> {
+                m_claw.transitionState();
+                m_elevator.transitionState();
+            }),
+            Commands.waitUntil(m_elevator::hasReachedTarget),
+            Commands.runOnce(m_pivot::transitionState)
+        );
 	}
     private Command cubeIntakeFront()
     {
@@ -136,53 +145,89 @@ public class RobotContainer {
         //         m_elevator.cubeIntake();
         //         m_claw.cubeIntakeFront();
         //     });
-		return Commands.run(()-> {m_claw.cubeIntakeFront(); m_pivot.cubeIntakeFront();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{m_elevator.cubeIntake();}));
+		// return Commands.run(()-> {m_claw.cubeIntakeFront(); m_pivot.cubeIntakeFront();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{m_elevator.cubeIntake();}));
+		return Commands.sequence(
+            Commands.runOnce(() -> {
+                m_claw.cubeIntakeFront(); 
+                m_pivot.cubeIntakeFront();
+            }),
+            Commands.waitUntil(m_pivot::hasReachedTarget),
+            Commands.runOnce(m_elevator::cubeIntake)
+        );
     }
     private Command cubeIntakeBack()
     {
-        return new InstantCommand(
-            () -> {
-                m_pivot.cubeIntakeBack();
-                m_elevator.cubeIntake();
+        // return new InstantCommand(() -> {m_pivot.cubeIntakeBack(); m_claw.cubeIntakeBack();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{ m_elevator.cubeIntake();}));
+		return Commands.sequence(
+            Commands.runOnce(() -> {
+                m_pivot.cubeIntakeBack(); 
                 m_claw.cubeIntakeBack();
-            });
+            }),
+            Commands.waitUntil(m_pivot::hasReachedTarget),
+            Commands.runOnce(m_elevator::cubeIntake)
+        );
     }
     private Command coneIntakeFront()
     {
-        return new InstantCommand(
-            () -> {
-                m_pivot.coneIntakeFront();
-                m_elevator.coneIntake();
+        // return Commands.run(() -> {m_pivot.coneIntakeFront(); m_claw.coneIntakeFront();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{m_elevator.coneIntake();})
+		return Commands.sequence(
+            Commands.runOnce(() -> {
+                m_pivot.coneIntakeFront(); 
                 m_claw.coneIntakeFront();
-            });
+            }),
+            Commands.waitUntil(m_pivot::hasReachedTarget),
+            Commands.runOnce(m_elevator::coneIntake)
+        );
     }
     private Command coneIntakeBack()
     {
-        return new InstantCommand(
-            () -> {
-                m_pivot.coneIntakeBack();
-                m_elevator.coneIntake();
+        // return Commands.run(() -> {m_pivot.coneIntakeBack(); m_claw.coneIntakeBack();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{ m_elevator.coneIntake();}));
+		return Commands.sequence(
+            Commands.runOnce(() -> {
+                m_pivot.coneIntakeBack(); 
                 m_claw.coneIntakeBack();
-            });
+            }),
+            Commands.waitUntil(m_pivot::hasReachedTarget),
+            Commands.runOnce(m_elevator::coneIntake)
+        );
+		
     }
     private Command coneScoreState()
     {
         // return new InstantCommand(
         //     () -> {
-        //         m_pivot.coneScoreState();
-        //         m_elevator.coneScoreState();
+        //         m_pivot.coneScoreState();uuuu
         //         m_claw.coneScoreState();
         //     });
-		return Commands.run(()-> {m_claw.coneScoreState(); m_pivot.coneScoreState();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{m_elevator.coneScoreState();}));
+		// return Commands.run(()-> {m_claw.coneScoreState(); m_pivot.coneScoreState();}).andThen(Commands.waitUntil(()->m_pivot.hasReachedTarget())).andThen(new InstantCommand(()->{m_elevator.coneScoreState();}));
+		// return Commands.run(()-> {m_claw.coneScoreState(); m_pivot.coneScoreState();})
+		// .until(()->!m_pivot.hasReachedTarget())
+		// .andThen(Commands.waitUntil(()->m_pivot.hasReachedTarget()))
+		// .andThen(new InstantCommand(()->{m_elevator.coneScoreState();}))
+		// ;
+		return Commands.sequence(
+            Commands.runOnce(() -> {
+                m_claw.coneScoreState(); 
+                m_pivot.coneScoreState();
+            }),
+            Commands.waitUntil(m_pivot::hasReachedTarget),
+            Commands.runOnce(m_elevator::coneScoreState)
+        );
     }
     private Command cubeScoreState()
     {
-        return new InstantCommand(
-            () -> {
+        // // return Commands.run(() -> {m_pivot.cubeScoreState(); m_elevator.cubeScoreState(); m_claw.cubeScoreState();});
+		// return Commands.run(()-> {m_claw.cubeScoreState(); m_pivot.cubeScoreState();}).andThen(Commands.waitUntil(()->!m_pivot.hasReachedTarget())).andThen(Commands.waitUntil(()->m_pivot.hasReachedTarget())).andThen(new InstantCommand(()->{m_elevator.cubeScoreState();}));
+		// return Commands.run(()-> {m_claw.cubeScoreState(); m_pivot.cubeScoreState();}).until(()->m_pivot.hasReachedTarget()).andThen(new InstantCommand(()->{m_elevator.cubeScoreState();}));
+		return Commands.sequence(
+            Commands.runOnce(() -> {
+                m_claw.cubeScoreState(); 
                 m_pivot.cubeScoreState();
-                m_elevator.cubeScoreState();
-                m_claw.cubeScoreState();
-            });
+            }),
+            Commands.waitUntil(m_pivot::hasReachedTarget),
+            Commands.runOnce(m_elevator::cubeScoreState)
+        );
+
     }
 
     /**
@@ -241,7 +286,9 @@ public class RobotContainer {
 	public static boolean pivotHasReachedTarget()
 	{
 		return m_pivot.hasReachedTarget();
-	}public static boolean elevatorHasReachedPose()
+	}
+	
+	public static boolean elevatorHasReachedPose()
 	{
 		return m_elevator.hasReachedTarget();
 	}
@@ -256,4 +303,3 @@ public class RobotContainer {
 		return m_elevator.getLength();
 	}
 }
-  

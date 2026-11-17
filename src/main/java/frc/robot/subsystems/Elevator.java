@@ -91,7 +91,7 @@ public class Elevator extends SubsystemBase {
 		SmartDashboard.putBoolean("down",isDown.getAsBoolean());
 		SmartDashboard.putBoolean("up",isUp.getAsBoolean());
 		
-		if(Math.abs(state.position - motorR.getEncoder().getPosition()) < state.position/2)
+		if(Math.abs(state.position - motorR.getEncoder().getPosition()) < 60)
 			hasReachedTarget = true;
 		else
 			hasReachedTarget = false;
@@ -126,26 +126,32 @@ public class Elevator extends SubsystemBase {
 	public void transitionState()
 	{
 		state = ElevatorState.TRANSITION;
+		hasReachedTarget = false;
 	}
 	public void scoreConeState()
 	{
 		state = ElevatorState.CONESCORE;
+		hasReachedTarget = false;
 	}
 	public void cubeIntake()
 	{
 		state = ElevatorState.CUBEINTAKE;
+		hasReachedTarget = false;
 	}
 	public void coneIntake()
 	{
 		state = ElevatorState.CONEINTAKE;
+		hasReachedTarget = false;
 	}
 	public void coneScoreState()
 	{
 		state = ElevatorState.CONESCORE;
+		hasReachedTarget = false;
 	}
 	public void cubeScoreState()
 	{
 		state = ElevatorState.CUBESCORE;
+		hasReachedTarget = false;
 	}
 
 }
