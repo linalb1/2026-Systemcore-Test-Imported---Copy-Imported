@@ -15,6 +15,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
+import frc.robot.Robot;
 import frc.robot.Constants.Ports;
 import frc.robot.RobotContainer;
 
@@ -22,7 +23,7 @@ public class Pivot extends SubsystemBase {
 	private SparkFlex motorL = new SparkFlex(Ports.pivotL, MotorType.kBrushless);
 	private SparkFlex motorR = new SparkFlex(Ports.pivotR, MotorType.kBrushless);
 
-	private PIDController pid = new PIDController(0.05, 0, 0);
+	private PIDController pid = new PIDController(0.085, 0, 0);
 
 	public Pivot() 
 	{
@@ -41,7 +42,7 @@ public class Pivot extends SubsystemBase {
 	}
 
 	//angle fron zero to horizontal
-	private static final double offset = 35;
+	private static final double offset = 32;
 
 	public enum PivotState
 	{
@@ -64,7 +65,7 @@ public class Pivot extends SubsystemBase {
 
 
   	private static final double kG = 0.47;
-	private static final double pidClamp = 5;
+	private static double pidClamp = 8;
   
   @Override
 	public void periodic() 
@@ -80,6 +81,9 @@ public class Pivot extends SubsystemBase {
 			hasReachedTarget = true;
 		else
 			hasReachedTarget = false;
+
+		pidClamp = RobotContainer.getElevatorPose() > 80? 3.5: 8;
+
 		SmartDashboard.putNumber("Pivot/pivot encoder", motorL.getAbsoluteEncoder().getPosition());
 		SmartDashboard.putNumber("Pivot/Pivot Pos", getPose());
 		SmartDashboard.putNumber("Pivot/setpoint", pid.getSetpoint());
@@ -102,6 +106,11 @@ public class Pivot extends SubsystemBase {
 	public void transitionState()
 	{
 		state = PivotState.TRANSITION;
+		hasReachedTarget = false;
+	}
+	public void startState()
+	{
+		state = PivotState.START;
 		hasReachedTarget = false;
 	}
 	public void scoreConeState()

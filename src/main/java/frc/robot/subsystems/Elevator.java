@@ -91,7 +91,7 @@ public class Elevator extends SubsystemBase {
 		SmartDashboard.putBoolean("down",isDown.getAsBoolean());
 		SmartDashboard.putBoolean("up",isUp.getAsBoolean());
 		
-		if(Math.abs(state.position - motorR.getEncoder().getPosition()) < 60)
+		if(Math.abs(state.position - motorR.getEncoder().getPosition()) < 80)
 			hasReachedTarget = true;
 		else
 			hasReachedTarget = false;
@@ -120,6 +120,11 @@ public class Elevator extends SubsystemBase {
 	public double getLength()
 	{
 		return a * motorR.getEncoder().getPosition() + b;
+	}
+
+	public double getPose()
+	{
+		return motorR.getEncoder().getPosition();
 	}
 
 	

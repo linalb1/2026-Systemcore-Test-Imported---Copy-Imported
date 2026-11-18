@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import javax.lang.model.element.ModuleElement;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -98,7 +100,7 @@ public class RobotContainer {
      */   
     private void configureButtonBindings() {
         m_cont0.start().onTrue(new InstantCommand(() -> {m_driveSubsystem.zeroHeading();}));
-
+		m_cont0.back().onTrue(new InstantCommand(()->{m_elevator.transitionState();m_pivot.startState();m_claw.transitionState();}));
         // y is for cone
         slow.onTrue(new InstantCommand(() -> {speedMod = slowSpeed;}))
 			.onFalse(new InstantCommand(()-> {speedMod = defaultSpeed;}));
@@ -282,7 +284,10 @@ public class RobotContainer {
     {
         return m_pivot.getPose();
     }
-
+	public static double getElevatorPose()
+	{
+		return m_elevator.getPose();
+	}
 	public static boolean pivotHasReachedTarget()
 	{
 		return m_pivot.hasReachedTarget();
