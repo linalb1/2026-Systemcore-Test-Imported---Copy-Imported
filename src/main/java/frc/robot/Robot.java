@@ -55,18 +55,18 @@ public class Robot extends LoggedRobot {
 		// block in order for anything in the Command-based framework to work.
 		CommandScheduler.getInstance().run();
 
-		SmartDashboard.putBoolean("trigger/slow", RobotContainer.slow.getAsBoolean());
+		//SmartDashboard.putBoolean("trigger/slow", RobotContainer.slow.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/cone", RobotContainer.cone.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/cube", RobotContainer.cube.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/front", RobotContainer.front.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/intaking", RobotContainer.intaking.getAsBoolean());
+		//SmartDashboard.putBoolean("trigger/front", RobotContainer.front.getAsBoolean());
+		//SmartDashboard.putBoolean("trigger/intaking", RobotContainer.intaking.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/cubeintakefront", RobotContainer.cubeIntakeFront.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/cubeintakeback", RobotContainer.cubeIntakeBack.getAsBoolean());
+		//SmartDashboard.putBoolean("trigger/cubeintakeback", RobotContainer.cubeIntakeBack.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/coneintakefront", RobotContainer.coneIntakeFront.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/coneintakeback", RobotContainer.coneIntakeBack.getAsBoolean());
+		//SmartDashboard.putBoolean("trigger/coneintakeback", RobotContainer.coneIntakeBack.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/conescorestate", RobotContainer.coneScoreState.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/cubescorestate", RobotContainer.cubeScoreState.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/aligning", RobotContainer.aligning.getAsBoolean());
+		//SmartDashboard.putBoolean("trigger/aligning", RobotContainer.aligning.getAsBoolean());
 		// SmartDashboard.putBoolean("trigger/intakingcube", RobotContainer.intakingCube.getAsBoolean());
 		// SmartDashboard.putBoolean("trigger/intakingcone", RobotContainer.intakingCone.getAsBoolean());
 		// SmartDashboard.putBoolean("trigger/scorecone", RobotContainer.scoreCone.getAsBoolean());
