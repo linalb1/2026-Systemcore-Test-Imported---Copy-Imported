@@ -36,7 +36,7 @@ public class RobotContainer {
     private static final Elevator m_elevator = new Elevator();
     private static final Claw m_claw = new Claw();
 
-	private static final GenericHID mts = new GenericHID(2);
+	private static final GenericHID demoBoard = new GenericHID(2);
 	private static final Joystick joystick = new Joystick(2);
 
     // The driver's controller
@@ -46,23 +46,23 @@ public class RobotContainer {
     private final static double defaultSpeed = 0.8;
 	private final static double slowSpeed = 0.2;
 	private static double speedMod = defaultSpeed;
-	private static boolean coneSide = false;
-	public static Trigger inputless = new Trigger(()->
-		!(mts.getRawButton(1)||
-		mts.getRawButton(2)||
-		mts.getRawButton(3)||
-		mts.getRawButton(4)||
-		mts.getRawButton(5)||
-		mts.getRawButton(6)));
 
-	public static Trigger cone = new Trigger(()->coneSide);
+	public static Trigger inputless = new Trigger(()->
+		!(demoBoard.getRawButton(1)||
+		demoBoard.getRawButton(2)||
+		demoBoard.getRawButton(3)||
+		demoBoard.getRawButton(4)||
+		demoBoard.getRawButton(5)||
+		demoBoard.getRawButton(6)));
+
+	public static Trigger cone = new Trigger(()->demoBoard.getRawButton(7));
 	public static Trigger cube = cone.negate();
 	
 
-	public static Trigger cubeIntakeFront = cube.and(new Trigger(()->mts.getRawButton(1)));
-	public static Trigger cubeScoreState = cube.and(new Trigger(()->mts.getRawButton(2)));
-	public static Trigger coneIntakeFront = cone.and(new Trigger(()->mts.getRawButton(1)));
-	public static Trigger coneScoreState =  cone.and(new Trigger(()->mts.getRawButton(2)));
+	public static Trigger cubeIntakeBack = cube.and(new Trigger(()->demoBoard.getRawButton(2)));
+	public static Trigger cubeScoreState = cube.and(new Trigger(()->demoBoard.getRawButton(3)));
+	//public static Trigger coneIntakeBack = cone.and(new Trigger(()->demoBoard.getRawButton(1)));
+	public static Trigger coneScoreState =  cone.and(new Trigger(()->demoBoard.getRawButton(1)));
 	// public static Trigger intake = new Trigger
 	// public static Trigger outtake = 
 
@@ -87,9 +87,9 @@ public class RobotContainer {
         m_driveSubsystem.setDefaultCommand(new RunCommand(
                 () -> {
                     m_driveSubsystem.drive(
-			        m_driveSubsystem.inputDeadband(-m_cont0.getLeftY()) * slowSpeed,
-                    m_driveSubsystem.inputDeadband(-m_cont0.getLeftX()) * slowSpeed,
-                    m_driveSubsystem.inputDeadband(-m_cont0.getRightX()) * slowSpeed,
+			        m_driveSubsystem.inputDeadband(-joystick.getY()) * slowSpeed,
+                    m_driveSubsystem.inputDeadband(-joystick.getX()) * slowSpeed,
+                    m_driveSubsystem.inputDeadband(-joystick.getRawAxis(3)+joystick.getRawAxis(2) ) * slowSpeed,
 			true);}, m_driveSubsystem));
         // m_claw.setDefaultCommand(new InstantCommand(() -> {m_claw.transitionState();}, m_claw));
         // m_pivot.setDefaultCommand(new InstantCommand(() -> {m_pivot.transitionState();}, m_pivot));
@@ -109,14 +109,12 @@ public class RobotContainer {
         m_cont0.start().onTrue(new InstantCommand(() -> {m_driveSubsystem.zeroHeading();}));
 		m_cont0.back().onTrue(new InstantCommand(()->{m_elevator.transitionState();m_pivot.startState();m_claw.transitionState();}));
         // y is for cone
-		if(mts.getRawButton(7)){
-			coneSide = !coneSide;
-		}
+
 
         inputless.whileTrue(transitionState());
-        cubeIntakeFront.whileTrue(cubeIntakeFront());
+        cubeIntakeBack.whileTrue(cubeIntakeBack());
        // cubeIntakeBack.whileTrue(cubeIntakeBack());
-        coneIntakeFront.whileTrue(coneIntakeFront());
+       // coneIntakeBack.whileTrue(coneIntakeBack());
         //coneIntakeBack.whileTrue(coneIntakeBack());
         coneScoreState.whileTrue(coneScoreState());
         cubeScoreState.whileTrue(cubeScoreState());

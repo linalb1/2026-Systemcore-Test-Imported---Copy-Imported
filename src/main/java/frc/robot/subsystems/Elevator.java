@@ -51,10 +51,10 @@ public class Elevator extends SubsystemBase {
 	{
 		START(0),
 		TRANSITION(0),
-		CONESCORE(166),
+		CONESCORE(83),
 		CUBESCORE(166),
 		CONEINTAKE(0),
-		CUBEINTAKE(80);
+		CUBEINTAKE(110);
 
 		public double position;
 		

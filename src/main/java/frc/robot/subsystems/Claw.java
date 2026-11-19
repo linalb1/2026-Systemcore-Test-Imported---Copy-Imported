@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,7 +42,7 @@ public class Claw extends SubsystemBase {
 		START(0),
 		TRANSITION(-90),
 		CUBEINTAKEFRONT(50),
-		CUBEINTAKEBACK(-50),
+		CUBEINTAKEBACK(-45),
 		CONEINTAKEFRONT(-55),
 		CONEINTAKEBACK(55),
 		CUBESCORE(-102),
@@ -55,7 +56,7 @@ public class Claw extends SubsystemBase {
 	}
 	private TiltState state = TiltState.START;
 
-		private XboxController a = new XboxController(0);
+		private GenericHID a = new GenericHID(2);
 
  	@Override
 	public void periodic() 
@@ -71,9 +72,9 @@ public class Claw extends SubsystemBase {
 
 		SmartDashboard.putNumber("tilt encoder",tilt.getAbsoluteEncoder().getPosition());
 
-		if((state == TiltState.CUBEINTAKEBACK || state == TiltState.CUBEINTAKEFRONT) || (a.getAButton() && state == TiltState.CONESCORE))
+		if((state == TiltState.CUBEINTAKEBACK || state == TiltState.CUBEINTAKEFRONT) || (a.getRawButton(4) && state == TiltState.CONESCORE))
 			intake();
-		else if((state == TiltState.CONEINTAKEFRONT || state == TiltState.CONEINTAKEBACK) || (a.getAButton() && state == TiltState.CUBESCORE))
+		else if((state == TiltState.CONEINTAKEFRONT || state == TiltState.CONEINTAKEBACK) || (a.getRawButton(4) && state == TiltState.CUBESCORE))
 			outtake();
 		else 
 			claw.set(0);

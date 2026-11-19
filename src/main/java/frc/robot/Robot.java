@@ -60,9 +60,9 @@ public class Robot extends LoggedRobot {
 		SmartDashboard.putBoolean("trigger/cube", RobotContainer.cube.getAsBoolean());
 		//SmartDashboard.putBoolean("trigger/front", RobotContainer.front.getAsBoolean());
 		//SmartDashboard.putBoolean("trigger/intaking", RobotContainer.intaking.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/cubeintakefront", RobotContainer.cubeIntakeFront.getAsBoolean());
+		SmartDashboard.putBoolean("trigger/cubeintakefront", RobotContainer.cubeIntakeBack.getAsBoolean());
 		//SmartDashboard.putBoolean("trigger/cubeintakeback", RobotContainer.cubeIntakeBack.getAsBoolean());
-		SmartDashboard.putBoolean("trigger/coneintakefront", RobotContainer.coneIntakeFront.getAsBoolean());
+		//SmartDashboard.putBoolean("trigger/coneintakefront", RobotContainer.coneIntakeBack.getAsBoolean());
 		//SmartDashboard.putBoolean("trigger/coneintakeback", RobotContainer.coneIntakeBack.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/conescorestate", RobotContainer.coneScoreState.getAsBoolean());
 		SmartDashboard.putBoolean("trigger/cubescorestate", RobotContainer.cubeScoreState.getAsBoolean());
