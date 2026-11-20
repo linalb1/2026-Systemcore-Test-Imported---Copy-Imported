@@ -4,8 +4,7 @@
 
 package frc.robot;
 
-import javax.lang.model.element.ModuleElement;
-
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -68,6 +67,7 @@ public class RobotContainer {
     // public static Trigger intakingCone = intaking.and(cone);
     // public static Trigger intakingCube = intaking.and(cube);
 
+	private SlewRateLimiter slew = new SlewRateLimiter(3);
 	
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -80,9 +80,9 @@ public class RobotContainer {
         m_driveSubsystem.setDefaultCommand(new RunCommand(
                 () -> {
                     m_driveSubsystem.drive(
-			        m_driveSubsystem.inputDeadband(-m_cont0.getLeftY()) * speedMod,
-                    m_driveSubsystem.inputDeadband(-m_cont0.getLeftX()) * speedMod,
-                    m_driveSubsystem.inputDeadband(-m_cont0.getRightX()) * speedMod,
+			        slew.calculate(m_driveSubsystem.inputDeadband(-m_cont0.getLeftY()) * speedMod),
+                    slew.calculate(m_driveSubsystem.inputDeadband(-m_cont0.getLeftX()) * speedMod),
+                    slew.calculate(m_driveSubsystem.inputDeadband(-m_cont0.getRightX()) * speedMod),
 			true);}, m_driveSubsystem));
         // m_claw.setDefaultCommand(new InstantCommand(() -> {m_claw.transitionState();}, m_claw));
         // m_pivot.setDefaultCommand(new InstantCommand(() -> {m_pivot.transitionState();}, m_pivot));
